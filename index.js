@@ -26,13 +26,18 @@ async function run() {
     const announcementCollection = client
       .db("vistaForum")
       .collection("announcement");
+    const postCollection = client.db("vistaForum").collection("posts");
 
     //   announcement collection
-    app.get("/announcement", async (req, res) => {
+    app.get("/announcements", async (req, res) => {
       const result = await announcementCollection.find().toArray();
       res.send(result);
     });
-
+    // all posts
+    app.get("/posts", async (req, res) => {
+      const result = await postCollection.find().toArray();
+      res.send(result);
+    });
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log(
