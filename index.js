@@ -47,8 +47,14 @@ async function run() {
     app.get("/posts/:id", async (req, res) => {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };
-
       const result = await postCollection.findOne(query);
+      res.send(result);
+    });
+    // all post get method
+    app.get("/allPosts", async (req, res) => {
+      const email = req.query.email;
+      const query = { email: email };
+      const result = await addPostsCollection.find(query).toArray();
       res.send(result);
     });
 
@@ -64,7 +70,7 @@ async function run() {
       res.send(result);
     });
     // Add posts post method
-    app.post("/posts", async (req, res) => {
+    app.post("/allPosts", async (req, res) => {
       const post = req.body;
       const result = await addPostsCollection.insertOne(post);
       res.send(result);
