@@ -27,6 +27,7 @@ async function run() {
       .db("vistaForum")
       .collection("announcement");
     const postCollection = client.db("vistaForum").collection("posts");
+    const usersCollection = client.db("vistaForum").collection("users");
 
     //   announcement collection
     app.get("/announcements", async (req, res) => {
@@ -47,6 +48,18 @@ async function run() {
       const query = { _id: new ObjectId(id) };
 
       const result = await postCollection.findOne(query);
+      res.send(result);
+    });
+
+    // users post method
+    app.post("/users", async (req, res) => {
+      const user = req.body;
+      const query = { email: user.email };
+      const existUser = await usersCollection.findOne(query);
+      if (existUser) {
+        return res.send({ message: "User already exists", insertedId: null });
+      }
+      const result = await usersCollection.insertOne(user);
       res.send(result);
     });
     // Send a ping to confirm a successful connection
