@@ -61,7 +61,11 @@ async function run() {
       const result = await addPostsCollection.find(query).toArray();
       res.send(result);
     });
-
+    // all users get method
+    app.get("/users", async (req, res) => {
+      const result = await usersCollection.find().toArray();
+      res.send(result);
+    });
     // users post method
     app.post("/users", async (req, res) => {
       const user = req.body;
