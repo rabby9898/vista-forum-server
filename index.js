@@ -26,7 +26,7 @@ async function run() {
     const announcementCollection = client
       .db("vistaForum")
       .collection("announcement");
-    const postCollection = client.db("vistaForum").collection("posts");
+    // const postCollection = client.db("vistaForum").collection("posts");
     const usersCollection = client.db("vistaForum").collection("users");
     const addPostsCollection = client.db("vistaForum").collection("allPosts");
 
@@ -36,21 +36,25 @@ async function run() {
       res.send(result);
     });
     // all posts
-    app.get("/posts", async (req, res) => {
-      const result = await postCollection
-        .find()
-        .sort({ posted_time: -1 })
-        .toArray();
-      res.send(result);
-    });
+    // app.get("/posts", async (req, res) => {
+    //   const result = await postCollection
+    //     .find()
+    //     .sort({ posted_time: -1 })
+    //     .toArray();
+    //   res.send(result);
+    // });
     // post details get method
-    app.get("/posts/:id", async (req, res) => {
+    app.get("/allPosts/:id", async (req, res) => {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };
-      const result = await postCollection.findOne(query);
+      const result = await addPostsCollection.findOne(query);
       res.send(result);
     });
     // all post get method
+    app.get("/posts", async (req, res) => {
+      const result = await addPostsCollection.find().toArray();
+      res.send(result);
+    });
     app.get("/allPosts", async (req, res) => {
       const email = req.query.email;
       const query = { email: email };
@@ -73,6 +77,13 @@ async function run() {
     app.post("/allPosts", async (req, res) => {
       const post = req.body;
       const result = await addPostsCollection.insertOne(post);
+      res.send(result);
+    });
+    // post delete method
+    app.delete("/allPosts/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await addPostsCollection.deleteOne(query);
       res.send(result);
     });
     // Send a ping to confirm a successful connection
