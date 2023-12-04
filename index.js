@@ -90,6 +90,24 @@ async function run() {
       const result = await addPostsCollection.deleteOne(query);
       res.send(result);
     });
+    // admin api
+    app.patch("/users/admin/:id", async (req, res) => {
+      const id = req.params.id;
+      const filter = { _id: new ObjectId(id) };
+      const updatedDoc = {
+        $set: {
+          role: "admin",
+        },
+      };
+      const result = await usersCollection.updateOne(filter, updatedDoc);
+      res.send(result);
+    });
+    // make announcement api
+    app.post("/makeAnnounce", async (req, res) => {
+      const announce = req.body;
+      const result = await announcementCollection.insertOne(announce);
+      res.send(result);
+    });
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log(
